@@ -2,9 +2,6 @@ package com.example.WarehouseSlot.PackList.controller;
 
 import com.example.WarehouseSlot.PackList.entity.PackList;
 import com.example.WarehouseSlot.PackList.Service.PackListService;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,98 +10,78 @@ import java.util.List;
 @RequestMapping("/api/packlists")
 public class PackListController {
 
-    private final PackListService packListService;
+    private final PackListService service;
 
-    public PackListController(
-            PackListService packListService) {
-
-        this.packListService = packListService;
+    public PackListController(PackListService service) {
+        this.service = service;
     }
 
-
-    // CREATE PACK LIST
+    // Create Pack List
     @PostMapping
-    public ResponseEntity<PackList> createPackList(
-            @RequestBody PackList packList) {
-
-        return new ResponseEntity<>(
-                packListService.createPackList(PackList),
-                HttpStatus.CREATED
-        );
+    public PackList createPackList(@RequestBody PackList packList) {
+        return service.createPackList(packList);
     }
 
-
-    // GET ALL PACK LISTS
+    // Get all Pack Lists
     @GetMapping
-    public ResponseEntity<List<PackList>> getAllPackLists() {
-
-        return ResponseEntity.ok(
-                packListService.getAllPackLists()
-        );
+    public List<PackList> getAllPackLists() {
+        return service.getAllPackLists();
     }
 
-
-    // GET PACK LIST BY ID
+    // Get Pack List by ID
     @GetMapping("/{id}")
-    public ResponseEntity<PackList> getPackListById(
-            @PathVariable Long id) {
-
-        return ResponseEntity.ok(
-                packListService.getPackListById(id)
-        );
+    public PackList getPackListById(@PathVariable Long id) {
+        return service.getPackListById(id);
     }
 
+    // Get by Pack List Number
+    @GetMapping("/number/{packListNumber}")
+    public PackList getByPackListNumber(
+            @PathVariable String packListNumber) {
 
-    // GET PACK LISTS BY ORDER NUMBER
+        return service.getByPackListNumber(packListNumber);
+    }
+
+    // Get by Order Number
     @GetMapping("/order/{orderNumber}")
-    public ResponseEntity<List<PackList>> getByOrder(
+    public List<PackList> getByOrderNumber(
             @PathVariable String orderNumber) {
 
-        return ResponseEntity.ok(
-                packListService.getPackListsByOrder(
-                        orderNumber
-                )
-        );
+        return service.getByOrderNumber(orderNumber);
     }
 
-
-    // GET PACK LISTS BY STATUS
+    // Get by Status
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<PackList>> getByStatus(
+    public List<PackList> getByStatus(
             @PathVariable String status) {
 
-        return ResponseEntity.ok(
-                packListService.getPackListsByStatus(
-                        status
-                )
-        );
+        return service.getByStatus(status);
     }
 
+    // Update Pack List
+    @PutMapping("/{id}")
+    public PackList updatePackList(
+            @PathVariable Long id,
+            @RequestBody PackList packList) {
 
-    // UPDATE STATUS
+        return service.updatePackList(id, packList);
+    }
+
+    // Update Status
     @PutMapping("/{id}/status")
-    public ResponseEntity<PackList> updateStatus(
+    public PackList updateStatus(
             @PathVariable Long id,
             @RequestParam String status) {
 
-        return ResponseEntity.ok(
-                packListService.updateStatus(
-                        id,
-                        status
-                )
-        );
+        return service.updateStatus(id, status);
     }
 
-
-    // DELETE PACK LIST
+    // Delete Pack List
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePackList(
-            @PathVariable Long id) {
+    public String deletePackList(@PathVariable Long id) {
 
-        packListService.deletePackList(id);
+        service.deletePackList(id);
 
-        return ResponseEntity.ok(
-                "Pack list deleted successfully"
-        );
+        return "Pack list deleted successfully";
     }
 }
